@@ -6,7 +6,7 @@ const MongoClient = require("mongodb").MongoClient;
 const faker = require("faker");
 
 const mongoUser = "sas";
-const mongoDbName = "sample_airbnb";
+const mongoDbName = "Spotiq";
 const mongoPass = "sashank007";
 const mongoConnStr = `mongodb+srv://${mongoUser}:${mongoPass}@cluster0-nydon.mongodb.net/${mongoDbName}?retryWrites=true`;
 
@@ -139,11 +139,15 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.post("/post_alert", async function(request, res) {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
+
   var crime_id = request.body.crime_id;
   var suspect_description = request.body.suspect_description;
   var crime_severity = request.body.crime_severity;
-  var location_x = request.body.location.x;
-  var location_y = request.body.location.y;
+  var location_x = request.body.location_x;
+  var location_y = request.body.location_y;
   var suspect_spotted = request.body.suspect_spotted;
   var time = request.body.time;
 
@@ -181,6 +185,9 @@ app.post("/post_alert", async function(request, res) {
 });
 
 app.get("/get_alert", async function(req, res) {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
   var id = req.query.id;
   if (!client.isConnected()) {
     // Cold start or connection timed out. Create new connection.
@@ -214,6 +221,9 @@ app.get("/get_alert", async function(req, res) {
 });
 
 app.get("/get_all_alerts", async function(req, res) {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
   if (!client.isConnected()) {
     // Cold start or connection timed out. Create new connection.
     try {
@@ -229,16 +239,6 @@ app.get("/get_all_alerts", async function(req, res) {
   // Connection ready. Perform insert and return result.
   try {
     const alerts = db.collection("alerts");
-    const response = {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true
-      },
-      body: JSON.stringify({
-        product: product
-      })
-    };
 
     alerts.find().toArray((err, result) => {
       res.send({
@@ -257,6 +257,9 @@ app.get("/get_all_alerts", async function(req, res) {
 // endpoints for crimes
 
 app.get("/get_all_crimes", async function(req, res) {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
   if (!client.isConnected()) {
     // Cold start or connection timed out. Create new connection.
     try {
@@ -272,12 +275,9 @@ app.get("/get_all_crimes", async function(req, res) {
   // Connection ready. Perform insert and return result.
   try {
     const alerts = db.collection("crimes");
+
     alerts.find().toArray((err, result) => {
       res.send({
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true
-        },
         alerts: result
       });
     });
@@ -292,6 +292,9 @@ app.get("/get_all_crimes", async function(req, res) {
 
 app.get("/get_crime", async function(req, res) {
   var id = req.query.id;
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
   if (!client.isConnected()) {
     // Cold start or connection timed out. Create new connection.
     try {
@@ -327,10 +330,14 @@ app.post("/post_crime", async function(request, res) {
   var crime_id = request.body.crime_id;
   var suspect_description = request.body.suspect_description;
   var crime_severity = request.body.crime_severity;
-  var location_x = request.body.location.x;
-  var location_y = request.body.location.y;
+  var location_x = request.body.location_x;
+  var location_y = request.body.location_y;
   var victim_details = request.body.victim_details;
   var time = request.body.time;
+
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Credentials", "true");
 
   if (!client.isConnected()) {
     // Cold start or connection timed out. Create new connection.
